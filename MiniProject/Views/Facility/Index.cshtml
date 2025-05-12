@@ -1,0 +1,153 @@
+﻿@model IEnumerable<MiniProject.Models.Facility.FacilityModel>
+
+@{
+    ViewData["Title"] = "Facility";
+}
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<div id="main" class="main">
+    @Html.AntiForgeryToken()
+</div>
+
+<h2>Manage Facility</h2>
+<button class="btn btn-primary mb-2" id="btnCreate">Create Facility</button>
+
+<table id="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(m => m.FacilityCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.FacilityName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.FacilityImage)
+
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.FacilityMaxCap)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.IsOpen)
+            </th>
+            <th>
+                Actions
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var m in Model)
+        {
+            <tr>
+
+                <td>
+                    <input type="hidden" name="Id" value="@m.Id" />
+                    @Html.DisplayFor(x => m.FacilityCode)
+                </td>
+                <td>@Html.DisplayFor(x => m.FacilityName)</td>
+                <td><img src="data:image/png;base64,@m.FacilityImage" alt="Facility Image" width="80" height="80" /></td>
+                <td>@Html.DisplayFor(x => m.FacilityMaxCap)</td>
+                <td>@Html.DisplayFor(x => m.IsOpen)</td>
+                <td>
+                    <button type="button" class="btn btn-warning btnEdit" data-id="@m.Id">Edit</button>
+                    <button type="button" class="btn btn-danger btnDelete" data-id="@m.Id">Delete </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="modal fade" id="facilityModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" id="facilityModalContent"></div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+        $("#table").DataTable();
+
+        $("#btnCreate").click(function(){
+            $.get('/Facility/Create', function(html){
+                $("#facilityModalContent").html(html);
+                $("#facilityModal").modal('show');
+                $.validator.unobtrusive.parse("#facilityForm");
+
+                bindFacilityFormSubmit();
+            });
+        });
+
+        $(".btnEdit").click(function(){
+            var id = $(this).data("id");
+
+             $.get('/Facility/Edit', {id: id}, function(html){
+                 $("#facilityModalContent").html(html);
+                 $("#facilityModal").modal('show');
+                 $.validator.unobtrusive.parse("#facilityForm");
+
+                 bindFacilityFormSubmit();
+             });
+        });
+
+        $(".btnDelete").click(function(){
+            var id = $(this).data("id");
+            if(confirm("Are you sure you want to delete this facility?")){
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("Delete", "Facility")',
+                    data: {id: id},
+                    headers: {
+                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function(response){
+                        alert(response.message);
+                        if(response.success){
+                            window.location.reload();
+                        }
+                    },
+                });
+            }
+            else
+            {
+                return false;
+            }
+        });
+        
+
+        function bindFacilityFormSubmit() {
+            $('#facilityForm').off('submit').on('submit', function (e) {
+                e.preventDefault();
+
+                var formData = new FormData(this);
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("Save", "Facility")',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function (response) {
+                        alert(response.message);
+                        if (response.success) {
+                            $("#facilityModal").modal('hide');
+                            window.location.reload();
+                        }
+                    },
+                    error: function (xhr) {
+                        console.error(xhr);
+                        alert("An error occurred while submitting the form.");
+                    }
+                });
+            });
+        }
+    });
+
+
+</script>

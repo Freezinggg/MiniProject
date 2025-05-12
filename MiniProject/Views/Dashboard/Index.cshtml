@@ -1,0 +1,55 @@
+﻿@model IEnumerable<MiniProject.Models.Ticket.TicketModel>
+
+@{
+    ViewData["Title"] = "Ticket Bookings";
+}
+
+<h2>Bookings</h2>
+
+<table id="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(m => m.FacilityName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.TicketID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.TicketHolderName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.TicketHolderEmail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.TicketValidFrom)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.TicketValidTo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Pax)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var m in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(x => m.FacilityName)</td>
+                <td>@Html.DisplayFor(x => m.TicketID) </td>
+                <td>@Html.DisplayFor(x => m.TicketHolderName)</td>
+                <td>@Html.DisplayFor(x => m.TicketHolderEmail)</td>
+                <td>@Html.DisplayFor(x => m.TicketValidFrom)</td>
+                <td>@Html.DisplayFor(x => m.TicketValidTo)</td>
+                <td>@Html.DisplayFor(x => m.Pax)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    $(document).ready(function(){
+       $("#table").DataTable();
+    });
+</script>

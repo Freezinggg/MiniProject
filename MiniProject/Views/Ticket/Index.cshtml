@@ -1,0 +1,73 @@
+﻿@model IEnumerable<MiniProject.Models.Facility.FacilityModel>
+
+@{
+    ViewData["Title"] = "Tickets";
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Choose a Theme Park</h2>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var m in Model)
+        {
+            <div class="col">
+                <div class="card h-100 book">
+                    <img src="data:image/png;base64,@m.FacilityImage" class="card-img-top" alt="@m.FacilityName" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">@m.FacilityName</h5>
+                        <p class="card-text">@m.FacilityName</p>
+                        <button class="btn btn-primary btnBook"
+                                data-id="@m.Id">
+                            Book Ticket
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="modal fade" id="ticketModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" id="ticketModalContent"></div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+        $('.btnBook').click(function (){
+            var facilityId = $(this).data('id');
+            $.get('/Ticket/Create', { facilityId: facilityId }, function (html) {
+                $('#ticketModalContent').html(html);
+                $('#ticketModal').modal('show');
+
+                 $('#ticketForm').on('submit', function (e) {
+                    e.preventDefault();
+
+                    var formData = new FormData(this); 
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("Book", "Ticket")',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (response) {
+                            alert(response.message);
+                            if (response.success) {
+                                window.location.reload();
+                            }
+                        },
+                        error: function (xhr) {
+                            alert('An error occurred while saving.');
+                        }
+                    });
+                });
+            });
+        });
+    });
+</script>

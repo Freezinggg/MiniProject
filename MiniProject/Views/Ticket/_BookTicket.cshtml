@@ -1,0 +1,45 @@
+﻿@model MiniProject.Models.Ticket.TicketModel
+
+@{
+    ViewData["Title"] = "Tickets";
+}
+
+<form asp-action="Book" method="post" id="ticketForm">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="modal-header">
+        <h5 class="modal-title">Book Ticket</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+
+    <div class="modal-body">
+        @Html.HiddenFor(x => x.FacilityId);
+        <div class="form-group mb-3">
+            <label asp-for="FacilityName"></label>
+            <input asp-for="FacilityName" class="form-control" disabled/>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="TicketHolderName"></label>
+            <input asp-for="TicketHolderName" class="form-control" />
+            <span asp-validation-for="TicketHolderName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="TicketHolderEmail"></label>
+            <input asp-for="TicketHolderEmail" class="form-control" />
+            <span asp-validation-for="TicketHolderEmail" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="Pax"></label>
+            <input asp-for="Pax" class="form-control" />
+            <span asp-validation-for="Pax" class="text-danger"></span>
+        </div>
+
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-success">Save</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+    </div>
+</form>

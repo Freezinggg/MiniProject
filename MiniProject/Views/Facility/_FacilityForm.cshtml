@@ -1,0 +1,59 @@
+﻿@model MiniProject.Models.Facility.FacilityModel
+@{
+    //Layout = null;
+    var modalTitle = Model.Id == 0 ? "Create Facility" : "Edit Facility";
+}
+
+<form asp-action="Save" method="post" enctype="multipart/form-data" id="facilityForm">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="modal-header">
+        <h5 class="modal-title">@modalTitle</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+
+    <div class="modal-body">
+        <div>@Html.HiddenFor(x => x.Id)</div>
+        <div class="form-group mb-3">
+            <label asp-for="FacilityCode"></label>
+
+            @if(Model.Id == 0) {
+                <input asp-for="FacilityCode" class="form-control" />
+            }else
+            {
+                <input asp-for="FacilityCode" class="form-control" readonly/>
+            }
+            
+            <span asp-validation-for="FacilityCode" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="FacilityName"></label>
+            <input asp-for="FacilityName" class="form-control" />
+            <span asp-validation-for="FacilityName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="UploadedImage">Upload Image</label>
+            <input asp-for="UploadedImage" type="file" class="form-control" />
+            <span asp-validation-for="UploadedImage" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="FacilityMaxCap"></label>
+            <input asp-for="FacilityMaxCap" class="form-control" />
+            <span asp-validation-for="FacilityMaxCap" class="text-danger"></span>
+        </div>
+
+        <div class="form-group form-check mb-3">
+            <input asp-for="IsOpen" class="form-check-input" />
+            <label asp-for="IsOpen" class="form-check-label"></label>
+            <span asp-validation-for="IsOpen" class="text-danger"></span>
+        </div>
+
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-success">Save</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+    </div>
+</form>
